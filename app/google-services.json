@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "468925219522",
+    "project_id": "holoners-82bf9",
+    "storage_bucket": "holoners-82bf9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:468925219522:android:0baebc0980daea546d315b",
+        "android_client_info": {
+          "package_name": "com.example.holoners"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiY7fJhSaCFd-v_CFkD9VAoNRXazIU8OI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
