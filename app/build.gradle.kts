@@ -7,6 +7,10 @@ android {
     namespace = "com.example.warehouse"
     compileSdk = 34
 
+//    dataBinding{
+//        enable = true
+//    }
+
     defaultConfig {
         applicationId = "com.example.warehouse"
         minSdk = 26
@@ -35,6 +39,7 @@ android {
     }
 }
 
+
 dependencies {
 
     implementation(libs.appcompat)
@@ -47,8 +52,15 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation(libs.cardview)
+    implementation(libs.firebase.storage)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation(libs.squareup.picasso)
+//    compileOnly(libs.eazegraph)
+//    compileOnly(libs.nineoldandroids)
+    implementation (libs.mpandroidchart)
+    implementation(libs.glide)
+    implementation(libs.recyclerview)
 
 }

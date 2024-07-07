@@ -5,12 +5,11 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class TableBarangModel extends ViewModel {
-
     private final MutableLiveData<String> mText;
 
     public TableBarangModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is Table Barang");
+        mText.setValue("This is table barang fragment");
     }
 
     public LiveData<String> getText() {

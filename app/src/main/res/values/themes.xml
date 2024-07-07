@@ -7,9 +7,16 @@
 
     <style name="Theme.Warehouse" parent="Base.Theme.Warehouse" />
 
-    <style name="Theme.Warehouse.NoActionBar">
+    <style name="Theme.Warehouse.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+        <item name="colorPrimary">@color/naturalPrimaryColor</item>
+        <item name="colorPrimaryVariant">@color/naturalPrimaryVariantColor</item>
+        <item name="colorOnPrimary">@color/naturalOnPrimaryColor</item>
+        <item name="colorSecondary">@color/naturalSecondaryColor</item>
+        <item name="colorSecondaryVariant">@color/naturalSecondaryVariantColor</item>
+        <item name="colorOnSecondary">@color/naturalOnSecondaryColor</item>
     </style>
 
     <style name="Theme.Warehouse.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -19,6 +26,17 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:statusBarColor">@android:color/white</item> <!-- Ubah ini menjadi putih -->
+    </style>
+
+    <!-- Tema Natural untuk LoginActivity dan SplashScreen -->
+    <style name="Theme.Warehouse.Natural" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/naturalPrimaryColor</item>
+        <item name="colorPrimaryVariant">@color/naturalPrimaryVariantColor</item>
+        <item name="colorOnPrimary">@color/naturalOnPrimaryColor</item>
+        <item name="colorSecondary">@color/naturalSecondaryColor</item>
+        <item name="colorSecondaryVariant">@color/naturalSecondaryVariantColor</item>
+        <item name="colorOnSecondary">@color/naturalOnSecondaryColor</item>
+        <!-- Customize your natural theme here -->
     </style>
 
 </resources>

@@ -5,22 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.warehouse.databinding.ActivityNavigationBinding;
+import com.google.android.material.navigation.NavigationView;
 
 public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -37,14 +34,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarNavigation.toolbar);
-//        binding.appBarNavigation.fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null)
-//                        .setAnchorView(R.id.fab).show();
-//            }
-//        });
+
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -67,13 +57,10 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         Log.d(TAG, "Received role: " + role);
 
         Bundle bundle = new Bundle();
-        bundle.putString("USERNAME", username);
         bundle.putString("NAME", name);
         bundle.putString("ROLE", role);
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_navigation);
         navController.navigate(R.id.nav_home, bundle);
     }
-
 
     @Override
     public boolean onSupportNavigateUp() {
