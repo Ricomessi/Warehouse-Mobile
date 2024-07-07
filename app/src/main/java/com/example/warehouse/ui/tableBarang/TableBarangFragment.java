@@ -32,8 +32,6 @@ public class TableBarangFragment extends Fragment {
     private BarangAdapter adapter;
     private List<Barang> barangList;
 
-
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentGalleryBinding.inflate(inflater, container, false);
@@ -42,19 +40,67 @@ public class TableBarangFragment extends Fragment {
         recyclerView = root.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         barangList = new ArrayList<>();
-        adapter = new BarangAdapter(getContext(), barangList);
+        adapter = new BarangAdapter(getContext(), barangList, new BarangAdapter.OnItemClickListener() {
+            @Override
+            public void onUpdateClick(Barang barang) {
+                openUpdateFragment(barang);
+            }
+
+            @Override
+            public void onDeleteClick(String barangId) {
+                deleteBarang(barangId);
+            }
+        });
         recyclerView.setAdapter(adapter);
 
         fetchBarangData();
 
         FloatingActionButton fabAddItem = binding.fabAddItem;
-        fabAddItem.setOnClickListener(view ->
-                Toast.makeText(getContext(), "Tambah barang", Toast.LENGTH_SHORT).show()
-        );
+        fabAddItem.setOnClickListener(view -> {
+            openCreateFragment();
+        });
+
 
         return root;
     }
 
+    private void openUpdateFragment(Barang barang) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("barang", barang);
+        bundle.putString("barangId", barang.getId());
+
+        UpdateBarangFragment updateFragment = new UpdateBarangFragment();
+        updateFragment.setArguments(bundle);
+
+        // Menggantikan fragment di dalam fragment_container dengan UpdateBarangFragment
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, updateFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void openCreateFragment() {
+        CreateBarangFragment createFragment = new CreateBarangFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, createFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+
+
+    private void deleteBarang(String barangId) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("barang").child(barangId);
+        databaseReference.removeValue()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getContext(), "Barang deleted", Toast.LENGTH_SHORT).show();
+                        fetchBarangData();
+                    } else {
+                        Toast.makeText(getContext(), "Failed to delete barang", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 
     private void fetchBarangData() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("barang");
@@ -67,7 +113,8 @@ public class TableBarangFragment extends Fragment {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Barang barang = dataSnapshot.getValue(Barang.class);
                     if (barang != null) {
-                        tempList.add(barang); // Add to temporary list
+                        barang.setId(dataSnapshot.getKey()); // Ensure the ID is set
+                        tempList.add(barang);
                     }
                 }
                 // Add items from tempList to barangList in reverse order
@@ -83,7 +130,6 @@ public class TableBarangFragment extends Fragment {
             }
         });
     }
-
 
     @Override
     public void onDestroyView() {

@@ -40,5 +40,11 @@
             android:text="Stock"
             android:textSize="16sp"
             android:textColor="@color/black" />
+        <ImageView
+            android:id="@+id/btn_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_delete_24" />
+
     </LinearLayout>
 </LinearLayout>

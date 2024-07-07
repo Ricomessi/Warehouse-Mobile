@@ -57,6 +57,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.squareup.picasso)
+    implementation(libs.firebase.storage)
 //    compileOnly(libs.eazegraph)
 //    compileOnly(libs.nineoldandroids)
     implementation (libs.mpandroidchart)
