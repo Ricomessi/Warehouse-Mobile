@@ -76,9 +76,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         DrawerLayout drawer = binding.drawerLayout;
         int id = item.getItemId();
 
-        // Close the drawer
-        drawer.closeDrawer(GravityCompat.START);
-
         if (id == R.id.nav_logout) {
             // Show confirmation dialog
             new AlertDialog.Builder(this)
@@ -97,6 +94,11 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                     .setNegativeButton("Cancel", null)
                     .show();
             return true;
+        } else if (id == R.id.nav_profile) {
+            // Navigate to ProfileActivity
+            Intent intent = new Intent(NavigationActivity.this, ProfileActivity.class);
+            startActivity(intent);
+            return true;
         } else {
             // Handle other navigation item clicks here
             NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_navigation);
@@ -109,4 +111,5 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             }
         }
     }
+
 }

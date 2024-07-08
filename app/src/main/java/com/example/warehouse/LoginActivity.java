@@ -52,12 +52,18 @@ public class LoginActivity extends AppCompatActivity {
                             String correctPassword = snapshot.child(username).child("password").getValue(String.class);
                             if (correctPassword != null && correctPassword.equals(password)) {
                                 String name = snapshot.child(username).child("nama").getValue(String.class);
+                                String email = snapshot.child(username).child("email").getValue(String.class);
+                                String profileUrl = snapshot.child(username).child("profile").getValue(String.class);
                                 String role = snapshot.child(username).child("role").getValue(String.class);
 
-                                // Save username to SharedPreferences
+                                // Save user details to SharedPreferences
                                 SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putString("USERNAME", username);
+                                editor.putString("NAME", name);
+                                editor.putString("EMAIL", email);
+                                editor.putString("PROFILE", profileUrl);
+                                editor.putString("ROLE", role);
                                 editor.apply();
 
                                 Toast.makeText(getApplicationContext(), "Login Berhasil", Toast.LENGTH_SHORT).show();
