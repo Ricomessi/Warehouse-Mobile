@@ -18,6 +18,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.warehouse.databinding.ActivityNavigationBinding;
 import com.google.android.material.navigation.NavigationView;
+import android.content.SharedPreferences;
 
 public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -48,9 +49,10 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         navigationView.setNavigationItemSelectedListener(this);
 
         // Get the username, name, and role from the intent
-        username = getIntent().getStringExtra("USERNAME");
-        String name = getIntent().getStringExtra("NAME");
-        String role = getIntent().getStringExtra("ROLE");
+        SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
+        username = sharedPreferences.getString("USERNAME", "");
+        String name = sharedPreferences.getString("NAME", "");
+        String role = sharedPreferences.getString("ROLE", "");
 
         Log.d(TAG, "Received username: " + username);
         Log.d(TAG, "Received name: " + name);

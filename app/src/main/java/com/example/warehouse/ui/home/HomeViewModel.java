@@ -16,7 +16,7 @@ public class HomeViewModel extends ViewModel {
         return mText;
     }
 
-    public void setText(String text) {
-        mText.setValue(text);
+    public void setTextWithUsername(String username) {
+        mText.setValue("Welcome " + username);
     }
 }

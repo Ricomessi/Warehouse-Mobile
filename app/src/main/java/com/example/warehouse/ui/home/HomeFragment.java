@@ -1,5 +1,6 @@
 package com.example.warehouse.ui.home;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,6 +33,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
@@ -54,8 +57,8 @@ public class HomeFragment extends Fragment {
         setupPieChart();
         loadDataFromFirebase();
 
-        // Fetch username from Firebase and update welcome message
-        fetchUsernameFromFirebase();
+        // Fetch username from session and update welcome message
+        fetchUsernameFromSession();
 
         return root;
     }
@@ -137,22 +140,15 @@ public class HomeFragment extends Fragment {
         pieChart.setHighlightPerTapEnabled(true);
     }
 
-    private void fetchUsernameFromFirebase() {
-        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("user/username");
-        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String username = snapshot.getValue(String.class);
-                if (username != null) {
-                    binding.welcome.setText("Welcome " + username);
-                }
-            }
+    private void fetchUsernameFromSession() {
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserSession", MODE_PRIVATE);
+        String username = sharedPreferences.getString("USERNAME", "");
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "Failed to fetch username", Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (!username.isEmpty()) {
+            homeViewModel.setTextWithUsername(username);
+        } else {
+            Toast.makeText(getContext(), "Failed to fetch username", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

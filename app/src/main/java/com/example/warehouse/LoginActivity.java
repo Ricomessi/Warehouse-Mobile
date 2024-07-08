@@ -1,6 +1,7 @@
 package com.example.warehouse;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -53,6 +54,12 @@ public class LoginActivity extends AppCompatActivity {
                                 String name = snapshot.child(username).child("nama").getValue(String.class);
                                 String role = snapshot.child(username).child("role").getValue(String.class);
 
+                                // Save username to SharedPreferences
+                                SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("USERNAME", username);
+                                editor.apply();
+
                                 Toast.makeText(getApplicationContext(), "Login Berhasil", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(getApplicationContext(), NavigationActivity.class);
                                 intent.putExtra("USERNAME", username);
@@ -67,7 +74,6 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Data Belum Terdaftar", Toast.LENGTH_SHORT).show();
                         }
                     }
-
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {

@@ -45,7 +45,7 @@ public class TableBarangFragment extends Fragment {
             @Override
             public void onUpdateClick(Barang barang) {
                 openUpdateActivity(barang);
-            }sss
+            }
 
             @Override
             public void onDeleteClick(String barangId) {
