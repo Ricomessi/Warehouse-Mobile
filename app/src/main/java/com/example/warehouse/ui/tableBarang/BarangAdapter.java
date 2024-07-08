@@ -1,13 +1,16 @@
 package com.example.warehouse.ui.tableBarang;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -49,7 +52,23 @@ public class BarangAdapter extends RecyclerView.Adapter<BarangAdapter.BarangView
 
         holder.itemView.setOnClickListener(v -> listener.onUpdateClick(barang));
 
-        holder.btnDelete.setOnClickListener(v -> listener.onDeleteClick(barang.getId()));
+        holder.btnDelete.setOnClickListener(v -> showDeleteDialog(barang.getId()));
+
+        holder.buttonAmbil.setOnClickListener(v -> {
+            Intent intent = new Intent(context, AmbilBarangActivity.class);
+            intent.putExtra("barang", barang);
+            intent.putExtra("barangId", barang.getId());
+            context.startActivity(intent);
+        });
+    }
+
+    private void showDeleteDialog(String barangId) {
+        new AlertDialog.Builder(context)
+                .setTitle("Delete Item")
+                .setMessage("Are you sure you want to delete this item?")
+                .setPositiveButton("Yes, Delete", (dialog, which) -> listener.onDeleteClick(barangId))
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     @Override
@@ -61,6 +80,7 @@ public class BarangAdapter extends RecyclerView.Adapter<BarangAdapter.BarangView
         TextView namaBarang, jenisBarang, stock;
         ImageView gambarBarang;
         ImageView btnDelete;
+        Button buttonAmbil;
 
         public BarangViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -69,6 +89,7 @@ public class BarangAdapter extends RecyclerView.Adapter<BarangAdapter.BarangView
             stock = itemView.findViewById(R.id.stock);
             gambarBarang = itemView.findViewById(R.id.gambar_barang);
             btnDelete = itemView.findViewById(R.id.btn_delete);
+            buttonAmbil = itemView.findViewById(R.id.buttonAmbil);
         }
     }
 }
