@@ -12,15 +12,21 @@
     <color name="colorOnSecondary">#000000</color>
     <color name="colorSurface">#FFFFFF</color>
     <color name="colorOnSurface">#000000</color>
-    <color name="naturalPrimaryColor">#FFA726</color>
-    <color name="naturalPrimaryVariantColor">#FB8C00</color>
-    <color name="naturalOnPrimaryColor">#FFFFFF</color>
-    <color name="naturalSecondaryColor">#8D6E63</color>
-    <color name="naturalSecondaryVariantColor">#795548</color>
-    <color name="naturalOnSecondaryColor">#FFFFFF</color>
+
+    <color name="naturalPrimaryColor">#90C7F4</color>
+    <color name="naturalPrimaryVariantColor">#DDEFFD</color>
+    <color name="naturalOnPrimaryColor">#000000</color>
+    <color name="naturalSecondaryColor">#B3D9F9</color>
+    <color name="naturalSecondaryVariantColor">#F1F8FC</color>
+    <color name="naturalOnSecondaryColor">#000000</color>
+    <color name="actionBarBackground">#90C7F4</color>
+
+
+
     <color name="color_one">#fb7268</color>
     <color name="color_white">#ededf2</color>
     <color name="color_two">#E3E0E0</color>
+
     <color name="elektronik">#FFA726</color>
     <color name="makanan">#66BB6A</color>
     <color name="pakaian">#EF5350</color>
