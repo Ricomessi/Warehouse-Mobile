@@ -16,4 +16,16 @@
     <string name="menu_gallery">Table Barang</string>
     <string name="menu_slideshow">Profile</string>
     <string name="menu_logout">Log Out</string>
+
+    <string name="warehouse">Warehouse</string>
+    <string-array name="jenis_barang_array">
+        <item>Elektronik</item>
+        <item>Pakaian</item>
+        <item>Makanan</item>
+        <item>Alat Tulis</item>
+        <item>Otomotif</item>
+        <item>Mainan</item>
+        <item>Barang Antik</item>
+        <item>Perabotan</item>
+    </string-array>
 </resources>
