@@ -1,4 +1,3 @@
-<!-- activity_create_barang.xml -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -12,11 +11,10 @@
         android:layout_height="wrap_content"
         android:hint="Nama Barang" />
 
-    <EditText
-        android:id="@+id/editTextJenisBarang"
+    <Spinner
+        android:id="@+id/spinnerJenisBarang"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Jenis Barang" />
+        android:layout_height="wrap_content"/>
 
     <EditText
         android:id="@+id/editTextStock"
@@ -30,8 +28,7 @@
         android:layout_height="200dp"
         android:contentDescription="Image Preview"
         android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
-        android:src="@drawable/barang" />
+        android:adjustViewBounds="true"/>
 
     <Button
         android:id="@+id/buttonChooseImage"
