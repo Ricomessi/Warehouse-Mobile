@@ -1,5 +1,6 @@
 package com.example.warehouse.ui.tableBarang;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,51 +44,39 @@ public class TableBarangFragment extends Fragment {
         adapter = new BarangAdapter(getContext(), barangList, new BarangAdapter.OnItemClickListener() {
             @Override
             public void onUpdateClick(Barang barang) {
-                openUpdateFragment(barang);
-            }
+                openUpdateActivity(barang);
+            }sss
 
             @Override
             public void onDeleteClick(String barangId) {
                 deleteBarang(barangId);
             }
         });
+
         recyclerView.setAdapter(adapter);
 
         fetchBarangData();
 
         FloatingActionButton fabAddItem = binding.fabAddItem;
         fabAddItem.setOnClickListener(view -> {
-            openCreateFragment();
+            openCreateActivity();
         });
-
 
         return root;
     }
 
-    private void openUpdateFragment(Barang barang) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("barang", barang);
-        bundle.putString("barangId", barang.getId());
-
-        UpdateBarangFragment updateFragment = new UpdateBarangFragment();
-        updateFragment.setArguments(bundle);
-
-        // Menggantikan fragment di dalam fragment_container dengan UpdateBarangFragment
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, updateFragment)
-                .addToBackStack(null)
-                .commit();
-    }
-
-    private void openCreateFragment() {
-        CreateBarangFragment createFragment = new CreateBarangFragment();
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, createFragment)
-                .addToBackStack(null)
-                .commit();
+    private void openUpdateActivity(Barang barang) {
+        Intent intent = new Intent(getContext(), UpdateBarangActivity.class);
+        intent.putExtra("barang", barang);
+        intent.putExtra("barangId", barang.getId());
+        startActivity(intent);
     }
 
 
+    private void openCreateActivity() {
+        Intent intent = new Intent(getContext(), CreateBarangActivity.class);
+        startActivity(intent);
+    }
 
     private void deleteBarang(String barangId) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("barang").child(barangId);
