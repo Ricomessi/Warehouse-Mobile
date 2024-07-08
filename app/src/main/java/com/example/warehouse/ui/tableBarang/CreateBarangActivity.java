@@ -1,25 +1,26 @@
 package com.example.warehouse.ui.tableBarang;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.warehouse.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,8 @@ public class CreateBarangActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
-    private EditText editTextNamaBarang, editTextJenisBarang, editTextStock;
+    private EditText editTextNamaBarang, editTextStock;
+    private Spinner spinnerJenisBarang;
     private ImageView imageViewGambarBarang;
     private Button buttonCreate, buttonChooseImage;
     private Uri imageUri;
@@ -39,12 +41,27 @@ public class CreateBarangActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_barang);
 
+        // Set up the action bar
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("Create Item");
+            actionBar.setDisplayHomeAsUpEnabled(true); // Show the back button
+            actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.actionBarBackground)));
+            actionBar.setHomeAsUpIndicator(R.drawable.baseline_arrow_back_24); // Ensure you have a black back button icon
+        }
+
         editTextNamaBarang = findViewById(R.id.editTextNamaBarang);
-        editTextJenisBarang = findViewById(R.id.editTextJenisBarang);
         editTextStock = findViewById(R.id.editTextStock);
+        spinnerJenisBarang = findViewById(R.id.spinnerJenisBarang);
         imageViewGambarBarang = findViewById(R.id.imageViewGambarBarang);
         buttonCreate = findViewById(R.id.buttonCreate);
         buttonChooseImage = findViewById(R.id.buttonChooseImage);
+
+        // Initialize Spinner
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.jenis_barang_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerJenisBarang.setAdapter(adapter);
 
         buttonChooseImage.setOnClickListener(v -> openFileChooser());
 
@@ -55,6 +72,13 @@ public class CreateBarangActivity extends AppCompatActivity {
                 createBarang(null); // Jika tidak ada gambar yang dipilih
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        // Handle the back button click here
+        onBackPressed();
+        return true;
     }
 
     private void openFileChooser() {
@@ -94,7 +118,7 @@ public class CreateBarangActivity extends AppCompatActivity {
 
     private void createBarang(String imageUrl) {
         String namaBarang = editTextNamaBarang.getText().toString().trim();
-        String jenisBarang = editTextJenisBarang.getText().toString().trim();
+        String jenisBarang = spinnerJenisBarang.getSelectedItem().toString();
         String stock = editTextStock.getText().toString().trim();
 
         if (TextUtils.isEmpty(namaBarang) || TextUtils.isEmpty(jenisBarang) || TextUtils.isEmpty(stock)) {
@@ -126,7 +150,7 @@ public class CreateBarangActivity extends AppCompatActivity {
 
     private void clearFields() {
         editTextNamaBarang.setText("");
-        editTextJenisBarang.setText("");
+        spinnerJenisBarang.setSelection(0);
         editTextStock.setText("");
         imageViewGambarBarang.setImageResource(R.drawable.barang);
         imageUri = null;
