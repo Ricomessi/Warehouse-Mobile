@@ -19,23 +19,28 @@
             android:name=".ui.tableBarang.AmbilBarangActivity"
             android:exported="false"
             android:label="Take Item"
-            android:theme="@style/Theme.warehouse.CRUD"/>
+            android:theme="@style/Theme.warehouse.CRUD" />
+        <activity
+            android:name=".AmbilBarangActivity"
+            android:exported="false" />
         <activity
             android:name=".EditProfileActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.warehouse.CRUD"/>
         <activity
             android:name=".ProfileActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.warehouse.CRUD"/>
         <activity
             android:name=".ui.tableBarang.UpdateBarangActivity"
             android:exported="false"
             android:label="Update Item"
-            android:theme="@style/Theme.warehouse.CRUD"/>
+            android:theme="@style/Theme.warehouse.CRUD" />
         <activity
             android:name=".ui.tableBarang.CreateBarangActivity"
             android:exported="false"
             android:label="Create Item"
-            android:theme="@style/Theme.warehouse.CRUD"/>
+            android:theme="@style/Theme.warehouse.CRUD" />
         <activity
             android:name=".NavigationActivity"
             android:exported="false"

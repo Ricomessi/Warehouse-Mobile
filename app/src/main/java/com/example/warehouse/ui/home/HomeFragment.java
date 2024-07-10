@@ -141,15 +141,34 @@ public class HomeFragment extends Fragment {
     }
 
     private void fetchUsernameFromSession() {
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("UserSession", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserSession", MODE_PRIVATE);
         String username = sharedPreferences.getString("USERNAME", "");
 
         if (!username.isEmpty()) {
-            homeViewModel.setTextWithUsername(username);
+            DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users").child(username).child("nama");
+            usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        String nama = dataSnapshot.getValue(String.class);
+                        homeViewModel.setTextWithUsername(nama);
+                        // Gunakan nilai nama di sini, misalnya untuk mengatur teks welcomeTextView
+//                        welcomeTextView.setText("Welcome, " + nama);
+                    } else {
+                        Toast.makeText(getContext(), "User data not found", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Toast.makeText(getContext(), "Failed to fetch user data: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
         } else {
             Toast.makeText(getContext(), "Failed to fetch username", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     @Override
     public void onDestroyView() {

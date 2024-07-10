@@ -70,4 +70,18 @@ public class Barang implements Serializable {
             return "0";  // Default value or handle appropriately
         }
     }
+
+    public int getStockAsInt() {
+        if (stock instanceof String) {
+            try {
+                return Integer.parseInt((String) stock);
+            } catch (NumberFormatException e) {
+                return 0;  // Default value or handle error
+            }
+        } else if (stock instanceof Long) {
+            return ((Long) stock).intValue();
+        } else {
+            return 0;  // Default value or handle appropriately
+        }
+    }
 }

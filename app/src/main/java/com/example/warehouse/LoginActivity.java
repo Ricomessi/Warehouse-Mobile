@@ -35,11 +35,17 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String username = etUsername.getText().toString();
-                String password = etPassword.getText().toString();
+                String username = etUsername.getText().toString().trim();
+                String password = etPassword.getText().toString().trim();
 
                 if (username.isEmpty() || password.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Username atau Password salah", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Check if the username is a variation of "admin"
+                if (username.equalsIgnoreCase("admin")) {
+                    Toast.makeText(getApplicationContext(), "Username tidak valid", Toast.LENGTH_SHORT).show();
                     return;
                 }
 

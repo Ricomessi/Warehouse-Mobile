@@ -21,6 +21,9 @@
     <color name="naturalOnSecondaryColor">#000000</color>
     <color name="actionBarBackground">#90C7F4</color>
 
+    <color name="dark_gray">#666666</color>
+    <color name="light_gray">#DDDDDD</color>
+
 
 
     <color name="color_one">#fb7268</color>

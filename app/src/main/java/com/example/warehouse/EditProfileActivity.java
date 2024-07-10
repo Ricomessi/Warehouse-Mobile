@@ -2,15 +2,17 @@ package com.example.warehouse;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -24,7 +26,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
-    private EditText etUsername, etName, etEmail, etRole;
+    private EditText etName, etEmail, etPassword;
     private ImageView ivProfilePicture;
     private Button btnSaveProfile, btnChangeProfilePicture;
     private Uri imageUri;
@@ -36,13 +38,21 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        etUsername = findViewById(R.id.etUsername);
         etName = findViewById(R.id.etName);
         etEmail = findViewById(R.id.etEmail);
-        etRole = findViewById(R.id.etRole);
+        etPassword = findViewById(R.id.etPassword);
         ivProfilePicture = findViewById(R.id.ivProfilePicture);
         btnSaveProfile = findViewById(R.id.btnSaveProfile);
         btnChangeProfilePicture = findViewById(R.id.btnChangeProfilePicture);
+
+        // Set up the action bar
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("Edit Profile");
+            actionBar.setDisplayHomeAsUpEnabled(true); // Show the back button
+            actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.actionBarBackground)));
+            actionBar.setHomeAsUpIndicator(R.drawable.baseline_arrow_back_24); // Ensure you have a black back button icon
+        }
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
         String username = sharedPreferences.getString("USERNAME", "");
@@ -51,10 +61,8 @@ public class EditProfileActivity extends AppCompatActivity {
         String role = sharedPreferences.getString("ROLE", "");
         String profileUrl = sharedPreferences.getString("PROFILE", "");
 
-        etUsername.setText(username);
         etName.setText(name);
         etEmail.setText(email);
-        etRole.setText(role);
 
         if (!profileUrl.isEmpty()) {
             Glide.with(this).load(profileUrl).into(ivProfilePicture);
@@ -62,12 +70,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         btnChangeProfilePicture.setOnClickListener(view -> openFileChooser());
 
-        btnSaveProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveProfileChanges();
-            }
-        });
+        btnSaveProfile.setOnClickListener(view -> saveProfileChanges(username));
     }
 
     private void openFileChooser() {
@@ -86,13 +89,12 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void saveProfileChanges() {
-        String newUsername = etUsername.getText().toString();
+    private void saveProfileChanges(String username) {
         String newName = etName.getText().toString();
         String newEmail = etEmail.getText().toString();
-        String newRole = etRole.getText().toString();
+        String newPassword = etPassword.getText().toString();
 
-        if (newUsername.isEmpty() || newName.isEmpty() || newEmail.isEmpty() || newRole.isEmpty()) {
+        if (newName.isEmpty() || newEmail.isEmpty() || newPassword.isEmpty()) {
             Toast.makeText(getApplicationContext(), "All fields must be filled", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -100,13 +102,13 @@ public class EditProfileActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        database = FirebaseDatabase.getInstance().getReference("users").child(newUsername);
+        database = FirebaseDatabase.getInstance().getReference("users").child(username);
         database.child("nama").setValue(newName);
         database.child("email").setValue(newEmail);
-        database.child("role").setValue(newRole);
+        database.child("password").setValue(newPassword); // Updating password
 
         if (imageUri != null) {
-            storageReference = FirebaseStorage.getInstance().getReference("profile_pictures/" + newUsername + ".jpg");
+            storageReference = FirebaseStorage.getInstance().getReference("profile_pictures/" + username + ".jpg");
             UploadTask uploadTask = storageReference.putFile(imageUri);
             uploadTask.addOnSuccessListener(taskSnapshot -> storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
                 String profileUrl = uri.toString();
@@ -114,17 +116,42 @@ public class EditProfileActivity extends AppCompatActivity {
                 editor.putString("PROFILE", profileUrl);
                 editor.apply();
                 Toast.makeText(getApplicationContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
-                finish();
-            })).addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed to upload image", Toast.LENGTH_SHORT).show());
+
+                // Navigate back to ProfileActivity
+                Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
+                intent.putExtra("NAME", newName);
+                intent.putExtra("EMAIL", newEmail);
+                startActivity(intent);
+                finish(); // Finish EditProfileActivity
+
+            })).addOnFailureListener(e -> {
+                Toast.makeText(getApplicationContext(), "Failed to upload image", Toast.LENGTH_SHORT).show();
+            });
         } else {
             Toast.makeText(getApplicationContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
-            finish();
+
+            // Navigate back to ProfileActivity
+            Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
+            intent.putExtra("NAME", newName);
+            intent.putExtra("EMAIL", newEmail);
+            startActivity(intent);
+            finish(); // Finish EditProfileActivity
         }
 
-        editor.putString("USERNAME", newUsername);
         editor.putString("NAME", newName);
         editor.putString("EMAIL", newEmail);
-        editor.putString("ROLE", newRole);
+        editor.putString("PASSWORD", newPassword); // Storing updated password
         editor.apply();
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            // Handle the back button click here
+            finish(); // This will close the current activity and return to the previous one
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

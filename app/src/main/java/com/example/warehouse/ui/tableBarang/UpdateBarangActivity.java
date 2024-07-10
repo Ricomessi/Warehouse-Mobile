@@ -1,6 +1,7 @@
 package com.example.warehouse.ui.tableBarang;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,6 +30,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class UpdateBarangActivity extends AppCompatActivity {
@@ -90,10 +95,12 @@ public class UpdateBarangActivity extends AppCompatActivity {
         buttonChooseImage.setOnClickListener(v -> openFileChooser());
 
         buttonUpdate.setOnClickListener(v -> {
-            if (imageUri != null) {
-                uploadImage();
-            } else {
-                updateBarang(barang.getGambar_barang());
+            if (validateInputs()) {
+                if (imageUri != null) {
+                    uploadImage();
+                } else {
+                    updateBarang(barang.getGambar_barang());
+                }
             }
         });
     }
@@ -112,6 +119,11 @@ public class UpdateBarangActivity extends AppCompatActivity {
             imageUri = data.getData();
             imageViewGambarBarang.setImageURI(imageUri);
         }
+    }
+
+    private String getUsernameFromSession() {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserSession", MODE_PRIVATE);
+        return sharedPreferences.getString("USERNAME", "");
     }
 
     private void uploadImage() {
@@ -142,15 +154,39 @@ public class UpdateBarangActivity extends AppCompatActivity {
         }
     }
 
+    private boolean validateInputs() {
+        String namaBarang = editTextNamaBarang.getText().toString().trim();
+        String stock = editTextStock.getText().toString().trim();
+
+        if (TextUtils.isEmpty(namaBarang)) {
+            editTextNamaBarang.setError("Nama Barang is required");
+            return false;
+        }
+
+        if (TextUtils.isEmpty(stock)) {
+            editTextStock.setError("Stock is required");
+            return false;
+        }
+
+        try {
+            int stockValue = Integer.parseInt(stock);
+            if (stockValue <= 0) {
+                editTextStock.setError("Stock must be greater than 0");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            editTextStock.setError("Stock must be a valid number");
+            return false;
+        }
+
+        return true;
+    }
+
     private void updateBarang(String imageUrl) {
         String namaBarang = editTextNamaBarang.getText().toString().trim();
         String jenisBarang = spinnerJenisBarang.getSelectedItem().toString();
         String stock = editTextStock.getText().toString().trim();
-
-        if (TextUtils.isEmpty(namaBarang) || TextUtils.isEmpty(jenisBarang) || TextUtils.isEmpty(stock)) {
-            Toast.makeText(UpdateBarangActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        String username = getUsernameFromSession();
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("barang").child(barangId);
         Barang updatedBarang = new Barang();
@@ -163,11 +199,40 @@ public class UpdateBarangActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(UpdateBarangActivity.this, "Barang updated", Toast.LENGTH_SHORT).show();
+
+                        // Ambil tanggal saat ini
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        String currentDate = sdf.format(new Date());
+
+                        createTransactionHistory(barangId, "Mengupdate Barang " + namaBarang, stock, currentDate, username);
                         finish();
                     } else {
                         Toast.makeText(UpdateBarangActivity.this, "Failed to update barang", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void createTransactionHistory(String idBarang, String jenisTransaksi, String jumlah, String tanggalTransaksi, String username) {
+        DatabaseReference historyReference = FirebaseDatabase.getInstance().getReference("transaksi");
+        String historyId = historyReference.push().getKey();
+
+        Map<String, Object> historyData = new HashMap<>();
+        historyData.put("id_barang", idBarang);
+        historyData.put("jenis_transaksi", jenisTransaksi);
+        historyData.put("jumlah", jumlah);
+        historyData.put("tanggal_transaksi", tanggalTransaksi);
+        historyData.put("username", username);
+
+        if (historyId != null) {
+            historyReference.child(historyId).setValue(historyData)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(UpdateBarangActivity.this, "Transaction history created", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(UpdateBarangActivity.this, "Failed to create transaction history", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.example.warehouse.ui.tableBarang;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,9 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.warehouse.R;
-import com.example.warehouse.model.Barang;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -85,7 +81,7 @@ public class CreateBarangFragment extends Fragment {
 
     private void uploadImage() {
         if (imageUri != null) {
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference("uploads");
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference("barang");
             StorageReference fileReference = storageReference.child(UUID.randomUUID().toString());
 
             fileReference.putFile(imageUri)
@@ -133,7 +129,6 @@ public class CreateBarangFragment extends Fragment {
                     }
                 });
     }
-
 
     private void clearFields() {
         editTextNamaBarang.setText("");
