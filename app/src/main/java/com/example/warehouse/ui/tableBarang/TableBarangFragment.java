@@ -125,7 +125,7 @@ public class TableBarangFragment extends Fragment {
     }
 
     private void deleteTransactionHistory(String barangId) {
-        DatabaseReference historyReference = FirebaseDatabase.getInstance().getReference("history");
+        DatabaseReference historyReference = FirebaseDatabase.getInstance().getReference("transaksi");
         Query query = historyReference.orderByChild("id_barang").equalTo(barangId);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
